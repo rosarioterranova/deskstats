@@ -18,7 +18,7 @@ In Claude Code 2.1.275 or later:
 
 ```
 /plugin marketplace add rosarioterranova/deskstats
-/plugin install deskstats@rosario-terranova
+/plugin install deskstats@rosarioterranova
 ```
 
 ## What the band shows

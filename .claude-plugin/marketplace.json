@@ -1,5 +1,5 @@
 {
-  "name": "rosario-terranova",
+  "name": "rosarioterranova",
   "owner": { "name": "Rosario Terranova" },
   "description": "Claude plugins by Rosario Terranova",
   "plugins": [{ "name": "deskstats", "source": "./" }]
