@@ -17,7 +17,8 @@ The band follows your system's light or dark setting. It updates live while Clau
 In Claude Code 2.1.275 or later:
 
 ```
-/plugin install deskstats --marketplace rosarioterranova/deskstats
+/plugin marketplace add rosarioterranova/deskstats
+/plugin install deskstats@rosario-terranova
 ```
 
 ## What the band shows
