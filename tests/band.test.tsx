@@ -327,3 +327,25 @@ test('a running turn shows its tokens, cost, context, limit share and time befor
   await $.turn.complete(turn({ durationMs: 21_000, usage: tokens('claude-opus-5-5', 6000) }))
   for (const text of ['tokens 11k', 'agent time 21s ⌀ 21s / turn', '5-hour limit 39% 2% this session']) expect(await bandAlt($)).toContain(text)
 })
+
+test('collapse leaves the first row only, subagents running or not; expand brings the rest back', async ($, on) => {
+  seed(on)
+  on('clock.every', () => ({ value: { cancel() {} } }))
+  on('command.register', () => ({ value: { command: 'subagents' } }))
+  on('agent.spawn', () => ({ model: 'claude-haiku-5-5', agentId: 'a1' }))
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+  await $.agent.spawn(spawn('Find x'))
+  expect(await bandAlt($)).toContain('subagents 1 1 running')
+
+  const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  await ui.press({ key: 'collapse' })
+  const collapsed = String(((await ui.find({ type: 'Svg' })) as { props?: { alt?: string } })?.props?.alt)
+  expect(collapsed).toContain('5-hour limit')
+  expect(collapsed).not.toContain('session cost')
+  expect(collapsed).not.toContain('subagents')
+  expect(await ui.find({ key: 'subagents' })).toBeDefined()
+
+  await ui.press({ key: 'collapse' })
+  expect(String(((await ui.find({ type: 'Svg' })) as { props?: { alt?: string } })?.props?.alt)).toContain('session cost')
+  await ui.unmount()
+})

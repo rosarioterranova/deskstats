@@ -10,7 +10,7 @@ Usage stats for Claude desktop, in a band above the prompt: how close you are to
 
 ![The same band in dark mode](docs/band-dark.png)
 
-The band follows your system's light or dark setting. It updates live while Claude works: tokens, cost, context and limits after each model request, and agent time every second.
+The band follows your system's light or dark setting. The **▾ Collapse** button shrinks it to the first row (limits and context), even while subagents run; **▸ Expand** brings the rest back. It updates live while Claude works: tokens, cost, context and limits after each model request, and agent time every second.
 
 ## Install
 
@@ -20,6 +20,15 @@ In Claude Code 2.1.275 or later:
 /plugin marketplace add rosarioterranova/deskstats
 /plugin install deskstats@rosarioterranova
 ```
+
+To update to the latest version:
+
+```
+/plugin marketplace update rosarioterranova
+/plugin update deskstats@rosarioterranova
+```
+
+Then restart Claude Code (or run `/reload-plugins`) to load it.
 
 ## What the band shows
 

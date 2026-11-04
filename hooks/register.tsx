@@ -11,6 +11,7 @@ const EMPTY: Stats = { tokens: 0, busyMs: 0, turns: 0, seen: 0, costBase: 0, cos
 const usage = atom({ plugin: 'deskstats', key: 'usage' } as const, null)
 const stats = atom({ plugin: 'deskstats', key: 'stats' } as const, EMPTY)
 const agents = atom({ plugin: 'deskstats', key: 'agents' } as const, [])
+const collapsed = atom({ plugin: 'deskstats', key: 'collapsed' } as const, false)
 
 const PANE = 'deskstats-subagents'
 
@@ -355,7 +356,10 @@ export const register: Register = on => {
     if (e.surface === 'terminal' || e.props.hasSurvey || u === null) return next(e)
 
     const list = await read($, agents)
-    const rows = cells(u, { ...EMPTY, ...(await read($, stats)) }, await $.clock.now(), list).filter(r => r.length > 0)
+    const isCollapsed = (await read($, collapsed)) === true
+    const all = cells(u, { ...EMPTY, ...(await read($, stats)) }, await $.clock.now(), list).filter(r => r.length > 0)
+    // Collapsed keeps the first row only, subagents running or not.
+    const rows = isCollapsed ? all.slice(0, 1) : all
     // Other mods share this slot: draw theirs below ours. next(e) rejects only when nothing answers beneath.
     const below = await next(e).catch(() => undefined)
     const { Box, Button, Svg } = $.ui.resolve(e)
@@ -366,12 +370,11 @@ export const register: Register = on => {
     return (
       <Box flexDirection="column">
         <Svg source={bandSvg(rows, width)} alt={alt} />
-        {list.length > 0 ? (
-          <Box flexDirection="row">
-            <Box flexGrow={1} />
-            <Button key="subagents" plain label="Subagent details" onPress={() => openPane($)} />
-          </Box>
-        ) : null}
+        <Box flexDirection="row">
+          <Box flexGrow={1} />
+          {list.length > 0 ? <Button key="subagents" plain label="Subagent details" onPress={() => openPane($)} /> : null}
+          <Button key="collapse" plain label={isCollapsed ? '▸ Expand' : '▾ Collapse'} onPress={() => update($, collapsed, c => c !== true)} />
+        </Box>
         {below}
       </Box>
     )

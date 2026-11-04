@@ -1,6 +1,6 @@
 {
   "name": "deskstats",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Usage stats above the prompt in Claude desktop: 5-hour and weekly limits, context, session cost, tokens, turns, agent time and subagents, with a subagents pane",
   "author": { "name": "Rosario Terranova" },
   "license": "MIT",
